@@ -257,10 +257,12 @@
   /* ---------- Asistente con IA (chat) ---------- */
   .chat-boton {
     position: fixed; left: 20px; bottom: 20px; z-index: 40; display: flex; align-items: center; gap: 10px; height: 50px; padding: 0 20px 0 14px;
-    border-radius: 999px; background: #fff; color: #b3121f; font-size: 14px; font-weight: 600;
-    box-shadow: 0 0 0 1.5px #b3121f, 0 10px 30px rgba(92,6,14,.22); transition: transform .2s, background .2s, color .2s;
+    border-radius: 999px; background: #7a0c15; color: #fff; font-size: 14px; font-weight: 600;
+    box-shadow: 0 0 0 1.5px rgba(255,255,255,.85), 0 10px 30px rgba(92,6,14,.35); transition: transform .2s, background .2s;
+    animation: llamar 2.4s ease-out 1.5s 3;
   }
-  .chat-boton:hover { transform: translateY(-2px); background: #b3121f; color: #fff; }
+  .chat-boton:hover { transform: translateY(-2px); background: #5c0610; }
+  @keyframes llamar { 0% { box-shadow: 0 0 0 1.5px rgba(255,255,255,.85), 0 0 0 0 rgba(122,12,21,.45); } 70% { box-shadow: 0 0 0 1.5px rgba(255,255,255,.85), 0 0 0 16px rgba(122,12,21,0); } 100% { box-shadow: 0 0 0 1.5px rgba(255,255,255,.85), 0 0 0 0 rgba(122,12,21,0); } }
   .chat-boton svg { width: 24px; height: 24px; flex: none; }
   .chat-boton .punto { width: 8px; height: 8px; border-radius: 50%; background: #2eb872; box-shadow: 0 0 0 3px rgba(46,184,114,.2); }
   .chat-boton[aria-expanded="true"] { opacity: 0; pointer-events: none; }
