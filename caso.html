@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rediseño Doña Rosa · Caso de estudio</title>
+<meta name="description" content="Antes y después del concepto de rediseño del sitio web de Asados Doña Rosa: problemas encontrados, decisiones y resultados.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  /* Blanco y rojo, como la marca */
+  :root { --noche: #ffffff; --crema: #7a0c15; --crema-2: rgba(122,12,21,.74); --crema-3: rgba(179,18,31,.18); --rojo: #b3121f; --oro: #b3121f; --verde: #1f7a43; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "DM Sans", system-ui, sans-serif; color: var(--crema); background: var(--noche); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; height: auto; }
+  a { color: var(--oro); }
+  .envoltura { width: min(1080px, 100% - 40px); margin: 0 auto; }
+  .etiqueta { font-size: 13px; color: var(--oro); }
+  h1 { font-family: "Gilda Display", Georgia, serif; font-weight: 400; font-size: clamp(42px, 7vw, 92px); line-height: 1; margin: 14px 0 22px; }
+  h2 { font-family: "Gilda Display", Georgia, serif; font-weight: 400; font-size: clamp(30px, 4.4vw, 52px); line-height: 1.08; margin-bottom: 22px; }
+  header { padding: 90px 0 60px; }
+  header p { font-size: 18px; color: var(--crema-2); max-width: 640px; }
+  .enlaces { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+  .boton { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 4px; font-size: 13px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
+  .boton.rojo { background: var(--rojo); color: #fff; }
+  header { background: var(--rojo); color: #fff; }
+  header p { color: rgba(255,255,255,.86) !important; }
+  header .etiqueta { color: #fff; }
+  header .boton.rojo { background: #fff; color: var(--rojo); }
+  header .boton.linea { box-shadow: inset 0 0 0 1px #fff; color: #fff; }
+  .boton.linea { box-shadow: inset 0 0 0 1px var(--crema-2); color: var(--crema); }
+  section { padding: 70px 0; border-top: 1px solid var(--crema-3); }
+  .comparar { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  figure img { border-radius: 6px; border: 1px solid var(--crema-3); }
+  figcaption { font-size: 15px; color: var(--crema-2); margin-top: 12px; }
+  figcaption b { color: var(--crema); font-family: "Gilda Display", serif; font-weight: 400; font-size: 20px; display: block; }
+  @media (max-width: 760px) { .comparar { grid-template-columns: 1fr; } }
+  .tabla { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 16px 12px; border-bottom: 1px solid var(--crema-3); vertical-align: top; }
+  th { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--crema-2); font-weight: 500; }
+  td.antes { color: #9a4a50; }
+  td.despues { color: var(--verde); font-weight: 500; }
+  .nota { color: var(--crema-2); margin-bottom: 24px; font-size: 15px; }
+  .decisiones { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; }
+  .decision { padding: 22px 0; border-top: 1px solid var(--crema-3); }
+  .decision b { display: block; font-family: "Gilda Display", serif; font-weight: 400; font-size: 24px; margin-bottom: 6px; }
+  .decision p { color: var(--crema-2); font-size: 15px; }
+  @media (max-width: 760px) { .decisiones { grid-template-columns: 1fr; } }
+  ol { padding-left: 22px; color: var(--crema-2); }
+  ol li { margin-bottom: 10px; }
+  footer { padding: 40px 0 60px; font-size: 13px; color: var(--crema-2); border-top: 1px solid var(--crema-3); }
+</style>
+</head>
+<body>
+<header>
+  <div class="envoltura">
+    <span class="etiqueta">Caso de estudio · Concepto no oficial</span>
+    <h1>Rediseño del sitio web de Asados Doña Rosa</h1>
+    <p>Un restaurante paisa con 40 años de historia y siete sedes, con una página que tarda en mostrar lo importante, se desborda en el celular y no deja ver el menú. Propuse una versión con la elegancia de los sitios de restaurantes premiados, sin perder el rojo y el carácter paisa de la marca.</p>
+    <div class="enlaces">
+      <a class="boton rojo" href="index.html">Ver el concepto</a>
+      <a class="boton linea" href="https://www.asadosdonarosa.com/" rel="noopener">Ver la página actual ↗</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="envoltura">
+      <h2>Antes y después</h2>
+      <div class="comparar">
+        <figure>
+          <img src="img/antes.jpg" width="1024" height="645" alt="Captura de la página de inicio actual de Asados Doña Rosa: un banner rojo de 40 años, el texto del carrusel casi invisible y una barra de redes sociales encima del contenido" loading="lazy">
+          <figcaption><b>Antes</b>Lo primero es un banner; el texto principal del carrusel aparece casi transparente y seis íconos de redes tapan el borde derecho.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/despues.jpg" width="1024" height="645" alt="Captura del concepto: fondo blanco, título rojo grande «Tradición paisa desde 1986», botones para ver la carta y reservar, y una foto de comida típica al lado" loading="lazy">
+          <figcaption><b>Después</b>Un mensaje claro en rojo, las dos acciones principales a la mano y una foto nítida de la comida, sin filtros encima.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="envoltura">
+      <h2>Qué encontré y qué cambió</h2>
+      <p class="nota">Medido el 24 y 25 de noviembre de 2026 en la página de inicio, con el mismo método para las dos versiones.</p>
+      <div class="tabla">
+        <table>
+          <thead><tr><th>Aspecto</th><th>Antes</th><th>Después</th></tr></thead>
+          <tbody>
+            <tr><td>Títulos principales (H1) — Google espera uno</td><td class="antes">17</td><td class="despues">1</td></tr>
+            <tr><td>Imágenes sin descripción para lectores de pantalla</td><td class="antes">54 de 143</td><td class="despues">0</td></tr>
+            <tr><td>Archivos que descarga la página</td><td class="antes">≈ 250</td><td class="despues">≈ 15</td></tr>
+            <tr><td>Contenido que se sale de la pantalla (scroll lateral)</td><td class="antes">Sí</td><td class="despues">No</td></tr>
+            <tr><td>Menú del restaurante en texto</td><td class="antes">No: la sección Menú muestra productos de la tienda</td><td class="despues">Sí, por categorías</td></tr>
+            <tr><td>Acción principal en la primera pantalla</td><td class="antes">Un botón «Visítanos» en el menú y seis íconos flotantes compitiendo</td><td class="despues">«Ver la carta» y «Reservar» junto al título, más un botón de reserva siempre visible</td></tr>
+            <tr><td>Sedes</td><td class="antes">Lista larga en una página aparte</td><td class="despues">Acordeón con filtro por región y «Cómo llegar»</td></tr>
+            <tr><td>Año en el pie de página</td><td class="antes">©2023</td><td class="despues">Actualizado</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="envoltura">
+      <h2>Decisiones de diseño</h2>
+      <div class="decisiones">
+        <div class="decision"><b>Lenguaje de restaurante premiado</b><p>Me basé en la estructura de sitios de alta cocina nominados en Awwwards: tipografía con serifa grande, fotos grandes y nítidas, texto que se desplaza y mucho espacio. Hace que la comida típica se vea tan valiosa como es.</p></div>
+        <div class="decision"><b>Los colores de siempre</b><p>Se mantienen el blanco y el rojo de Doña Rosa: fondo blanco, textos y detalles en rojo, y secciones completas en rojo para la carta, la franja de platos y el pie de página. Los textos hablan en tono paisa.</p></div>
+        <div class="decision"><b>Movimiento con propósito</b><p>Texto que se desplaza con los platos típicos, fotos que se mueven suave al bajar y secciones que aparecen al llegar a ellas. Todo se desactiva si el usuario pide menos movimiento en su sistema.</p></div>
+        <div class="decision"><b>Primero el celular</b><p>Todo funciona en pantallas de 375 px: el menú abre a pantalla completa, los productos se deslizan de lado y las sedes se despliegan una por una.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="envoltura">
+      <h2>Cómo lo hice</h2>
+      <ol>
+        <li>Revisé la página actual en computador y celular, y medí títulos, imágenes, archivos y desbordes.</li>
+        <li>Organicé la información real del negocio: historia, sedes con sus servicios y productos para llevar con sus precios.</li>
+        <li>Estudié el diseño de referencia y lo adapté a la marca, con fotos libres de Unsplash.</li>
+        <li>Construí el concepto en HTML, CSS y JavaScript, sin plantillas, trabajando con IA (Claude), y lo probé en celular y computador.</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="envoltura">
+    Concepto de rediseño no oficial hecho por Pablo Ortiz Ochoa como proyecto de portafolio. No está afiliado a Asados Doña Rosa; las marcas y la captura de la página actual pertenecen a sus dueños y se muestran solo para comparar.
+    Fotos de comida: Unsplash (Willian Reis, Gennady Zakharin, Marcos Paulo Prado, Alfredo Burgos, Usman Yousaf, Leila Issa y Alexandra Tran).
+  </div>
+</footer>
+</body>
+</html>

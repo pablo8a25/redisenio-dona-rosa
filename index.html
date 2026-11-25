@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doña Rosa · Concepto de rediseño</title>
+<meta name="description" content="Concepto de rediseño no oficial del sitio web de Asados Doña Rosa, hecho como proyecto de portafolio.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#b3121f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  /* Colores de Doña Rosa: blanco y rojo.
+     Cada zona redefine las mismas variables:
+     blanca (por defecto), roja (.roja) y texto sobre foto (.sobre-foto). */
+  :root {
+    --fondo: #ffffff;
+    --tinta: #7a0c15;
+    --tinta-2: rgba(122, 12, 21, .74);
+    --linea: rgba(179, 18, 31, .18);
+    --acento: #b3121f;
+    --boton: #b3121f;
+    --boton-texto: #ffffff;
+    --boton-hover: #8f0d18;
+    --serif: "Gilda Display", Georgia, serif;
+    --sans: "DM Sans", "Segoe UI", system-ui, sans-serif;
+    --velo: rgba(92, 6, 14, .62);
+  }
+  .roja {
+    --fondo: #b3121f;
+    --tinta: #ffffff;
+    --tinta-2: rgba(255, 255, 255, .84);
+    --linea: rgba(255, 255, 255, .3);
+    --acento: #ffffff;
+    --boton: #ffffff;
+    --boton-texto: #b3121f;
+    --boton-hover: #f6dfe1;
+    background: var(--fondo); color: var(--tinta);
+  }
+  .sobre-foto {
+    --tinta: #ffffff;
+    --tinta-2: rgba(255, 255, 255, .88);
+    --linea: rgba(255, 255, 255, .35);
+    --acento: #ffffff;
+    color: var(--tinta);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--fondo); color: var(--tinta); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; height: auto; }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .etiqueta { font-size: 13px; font-weight: 500; letter-spacing: .02em; color: var(--acento); }
+  .envoltura { width: min(1240px, 100% - 40px); margin: 0 auto; }
+  :focus-visible { outline: 2px solid var(--acento); outline-offset: 3px; }
+
+  /* ---------- Botones ---------- */
+  .boton {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 48px; padding: 0 22px; border-radius: 4px;
+    font: 500 13px var(--sans); letter-spacing: .08em; text-transform: uppercase; text-decoration: none;
+    transition: background .2s ease, color .2s ease;
+  }
+  .boton.rojo { background: var(--boton); color: var(--boton-texto); }
+  .boton.rojo:hover { background: var(--boton-hover); }
+  .boton.linea { box-shadow: inset 0 0 0 1px var(--tinta); color: var(--tinta); }
+  .boton.linea:hover { background: var(--tinta); color: var(--fondo); }
+  .sobre-foto .boton.linea:hover { color: #b3121f; }
+
+  /* ---------- Aviso de concepto ---------- */
+  .aviso { position: relative; z-index: 30; font-size: 12.5px; text-align: center; padding: 7px 16px; }
+  .aviso a { font-weight: 600; }
+
+  /* ---------- Encabezado (sobre la foto de portada) ---------- */
+  .encabezado { position: absolute; left: 0; right: 0; z-index: 20; padding: 26px 0; }
+  .encabezado .envoltura { display: flex; align-items: center; justify-content: space-between; }
+  .marca { font-family: var(--serif); font-size: 30px; line-height: 1; text-decoration: none; }
+  .abrir-menu { display: flex; align-items: center; gap: 12px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
+  .abrir-menu i { display: grid; gap: 5px; }
+  .abrir-menu i b { display: block; width: 26px; height: 1.5px; background: currentColor; }
+
+  /* Menú a pantalla completa (rojo) */
+  .capa-menu {
+    position: fixed; inset: 0; z-index: 60; display: grid; grid-template-columns: 1fr 1fr;
+    opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility 0s linear .35s;
+  }
+  .capa-menu.abierta { opacity: 1; visibility: visible; transition: opacity .35s ease, visibility 0s; }
+  .capa-menu nav { display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 0 8vw; }
+  .capa-menu nav a { font-family: var(--serif); font-size: clamp(42px, 7vw, 88px); line-height: 1.1; text-decoration: none; color: var(--tinta-2); transition: color .2s, transform .3s; }
+  .capa-menu nav a:hover { color: var(--tinta); transform: translateX(10px); }
+  .capa-menu .foto { background: url(img/arepas.jpg) center / cover; }
+  .cerrar-menu { position: absolute; top: 28px; right: 28px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
+  .capa-menu .pie-menu { position: absolute; left: 8vw; bottom: 36px; font-size: 14px; color: var(--tinta-2); }
+  @media (max-width: 760px) { .capa-menu { grid-template-columns: 1fr; } .capa-menu .foto { display: none; } }
+
+  /* ---------- Portada ---------- */
+  /* Portada: fondo blanco, título rojo y la foto enmarcada (sin velo encima) */
+  .portada { padding: 130px 0 90px; }
+  .portada .envoltura { display: grid; grid-template-columns: 1.15fr .85fr; gap: 5vw; align-items: center; }
+  .portada .etiqueta { display: block; margin-bottom: 20px; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; }
+  .portada h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(54px, 8.6vw, 136px); line-height: .92; letter-spacing: -.01em; color: #b3121f; }
+  .portada h1 em { font-style: normal; display: inline-block; background: #b3121f; color: #fff; padding: 0 .12em .04em; margin-top: .06em; }
+  .portada p { color: var(--tinta-2); margin: 28px 0 26px; max-width: 420px; font-size: 17px; }
+  .portada .acciones { display: flex; flex-wrap: wrap; gap: 10px; }
+  .portada .marco { overflow: hidden; aspect-ratio: 4 / 5; }
+  .portada .marco img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); animation: acercar 2.4s cubic-bezier(.2,.7,.2,1) forwards; }
+  @keyframes acercar { to { transform: scale(1); } }
+  @media (max-width: 860px) {
+    .portada { padding: 110px 0 70px; }
+    .portada .envoltura { grid-template-columns: 1fr; gap: 40px; }
+    .portada .marco { aspect-ratio: 4 / 3; }
+  }
+
+  /* Botón de reserva flotante */
+  .reserva-flotante {
+    position: fixed; right: 20px; bottom: 20px; z-index: 40; display: flex; align-items: stretch; border-radius: 6px; overflow: hidden;
+    box-shadow: 0 0 0 1.5px rgba(255,255,255,.85), 0 10px 30px rgba(92,6,14,.3); font-size: 14px; font-weight: 500; color: #fff;
+  }
+  .reserva-flotante span { background: #b3121f; padding: 14px 18px; }
+  .reserva-flotante i { background: #8f0d18; display: grid; place-items: center; padding: 0 14px; font-style: normal; }
+
+  /* ---------- Introducción ---------- */
+  section { position: relative; }
+  .intro { padding: 140px 0; }
+  .intro .envoltura { display: grid; grid-template-columns: 5fr 6fr; gap: 8vw; align-items: center; }
+  .intro .foto { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; }
+  .intro h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(34px, 4.2vw, 60px); line-height: 1.08; margin: 16px 0 24px; }
+  .intro p { color: var(--tinta-2); max-width: 480px; }
+  .cifras { display: flex; gap: 48px; margin-top: 44px; padding-top: 28px; border-top: 1px solid var(--linea); }
+  .cifras b { display: block; font-family: var(--serif); font-weight: 400; font-size: 46px; line-height: 1; color: var(--acento); }
+  .cifras span { font-size: 13px; color: var(--tinta-2); }
+  @media (max-width: 860px) { .intro { padding: 90px 0; } .intro .envoltura { grid-template-columns: 1fr; } .cifras { gap: 28px; } }
+
+  /* ---------- Texto que se desplaza (franja roja) ---------- */
+  .cintas { padding: 26px 0; }
+  .cinta { overflow: hidden; padding: 6px 0; user-select: none; }
+  .cinta .pista { display: flex; width: max-content; animation: correr 38s linear infinite; }
+  .cinta.reversa .pista { animation-direction: reverse; }
+  .cinta span { font-family: var(--serif); font-size: clamp(64px, 10vw, 150px); line-height: 1.05; white-space: nowrap; padding-right: .4em; }
+  .cinta.contorno span { color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.75); }
+  @keyframes correr { to { transform: translateX(-50%); } }
+
+  /* ---------- Frase con fotos dispersas ---------- */
+  .frase { padding: 200px 0 220px; text-align: center; }
+  .frase h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(36px, 5vw, 72px); line-height: 1.1; max-width: 760px; margin: 0 auto 22px; position: relative; z-index: 2; }
+  .frase p { color: var(--tinta-2); max-width: 520px; margin: 0 auto; position: relative; z-index: 2; }
+  .dispersa { position: absolute; object-fit: cover; }
+  .d1 { width: 15vw; max-width: 210px; aspect-ratio: 3 / 4; left: 4vw; top: 70px; }
+  .d2 { width: 17vw; max-width: 240px; aspect-ratio: 4 / 5; right: 5vw; top: 30px; }
+  .d3 { width: 12vw; max-width: 170px; aspect-ratio: 1; right: 15vw; bottom: 40px; }
+  .d4 { width: 11vw; max-width: 160px; aspect-ratio: 4 / 5; left: 13vw; bottom: 60px; }
+  @media (max-width: 760px) {
+    .frase { padding: 150px 0 170px; }
+    .d1 { width: 26vw; top: 30px; left: 3vw; } .d2 { width: 28vw; top: 10px; right: 3vw; }
+    .d3 { width: 24vw; bottom: 20px; right: 6vw; } .d4 { width: 22vw; bottom: 30px; left: 8vw; }
+  }
+
+  /* ---------- Imagen a todo lo ancho ---------- */
+  /* Bloque rojo con la foto al lado */
+  .ancho { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; }
+  .ancho .texto { padding: 120px 6vw; display: flex; flex-direction: column; justify-content: center; }
+  .ancho h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 6vw, 92px); line-height: 1; margin: 12px 0 22px; }
+  .ancho p { color: var(--tinta-2); max-width: 430px; margin-bottom: 28px; }
+  .ancho .texto .boton { align-self: flex-start; }
+  .ancho img { width: 100%; height: 100%; min-height: 420px; object-fit: cover; }
+  @media (max-width: 860px) { .ancho { grid-template-columns: 1fr; } .ancho .texto { padding: 80px 20px; } .ancho img { min-height: 0; aspect-ratio: 4 / 3; } }
+
+  /* ---------- Platos de la casa ---------- */
+  .insignia { padding: 140px 0; }
+  .insignia .envoltura { display: grid; grid-template-columns: 1fr 1fr; gap: 6vw; align-items: start; }
+  .insignia .texto > p { color: var(--tinta-2); max-width: 420px; margin: 14px 0 40px; }
+  .lista-platos { list-style: none; border-top: 1px solid var(--linea); }
+  .lista-platos li { border-bottom: 1px solid var(--linea); }
+  .lista-platos button { width: 100%; text-align: left; padding: 22px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .lista-platos .nombre { font-family: var(--serif); font-size: clamp(30px, 3.6vw, 52px); line-height: 1; text-transform: uppercase; color: rgba(122,12,21,.4); transition: color .25s, padding .25s; }
+  .lista-platos .num { font-size: 13px; color: var(--acento); }
+  .lista-platos .detalle { max-height: 0; overflow: hidden; color: var(--tinta-2); transition: max-height .4s ease; }
+  .lista-platos .detalle p { padding: 0 0 22px; max-width: 420px; }
+  .lista-platos li.activo .nombre { color: #b3121f; padding-left: 14px; }
+  .lista-platos li.activo .detalle { max-height: 140px; }
+  .insignia .foto { position: sticky; top: 40px; aspect-ratio: 4 / 5; overflow: hidden; }
+  .insignia .foto img { width: 100%; height: 100%; object-fit: cover; transition: opacity .45s ease; }
+  @media (max-width: 860px) { .insignia { padding: 90px 0; } .insignia .envoltura { grid-template-columns: 1fr; } .insignia .foto { position: relative; top: 0; order: -1; } }
+
+  /* ---------- Carta completa (sección roja) ---------- */
+  .carta { padding: 120px 0; }
+  .carta h2, .llevar h2, .sedes h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(38px, 5vw, 72px); line-height: 1.05; margin-top: 10px; }
+  .pestanas { display: flex; flex-wrap: wrap; gap: 6px 28px; margin: 44px 0 36px; border-bottom: 1px solid var(--linea); }
+  .pestana { padding: 0 0 14px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-2); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .pestana[aria-selected="true"] { color: var(--tinta); border-color: var(--tinta); }
+  .platos { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; }
+  .platos li { padding: 18px 0; border-bottom: 1px dashed var(--linea); }
+  .platos .fila { display: flex; align-items: baseline; gap: 12px; }
+  .platos .fila b { font-family: var(--serif); font-weight: 400; font-size: 24px; }
+  .platos .fila i { flex: 1; border-bottom: 1px dotted var(--linea); transform: translateY(-5px); }
+  .platos .fila span { font-family: var(--serif); font-size: 20px; }
+  .platos small { color: var(--tinta-2); font-size: 14px; }
+  .nota { font-size: 13px; color: var(--tinta-2); margin-top: 26px; }
+  @media (max-width: 760px) { .carta { padding: 90px 0; } .platos { grid-template-columns: 1fr; } }
+
+  /* ---------- Para llevar ---------- */
+  .llevar { padding: 120px 0; }
+  .llevar .cabeza { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; }
+  .llevar .cabeza p { max-width: 380px; color: var(--tinta-2); }
+  .productos { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(230px, 1fr); gap: 1px; margin-top: 48px; background: var(--linea); border: 1px solid var(--linea); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+  .producto { background: var(--fondo); padding: 28px 24px; scroll-snap-align: start; display: flex; flex-direction: column; min-height: 230px; transition: background .2s; }
+  .producto:hover { background: #fdf3f3; }
+  .producto .n { font-family: var(--serif); font-size: 15px; color: var(--acento); }
+  .producto b { font-family: var(--serif); font-weight: 400; font-size: 26px; line-height: 1.1; margin: 18px 0 4px; }
+  .producto small { color: var(--tinta-2); }
+  .producto .pie { margin-top: auto; padding-top: 22px; display: flex; justify-content: space-between; align-items: center; }
+  .producto .precio { font-family: var(--serif); font-size: 22px; }
+  .producto button { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; border-bottom: 1px solid currentColor; padding-bottom: 2px; }
+
+  /* ---------- Sedes ---------- */
+  .sedes { padding: 130px 0; }
+  .sedes .cabeza { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
+  .filtros { display: flex; gap: 8px; }
+  .filtro { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; padding: 9px 16px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--linea); color: var(--tinta-2); }
+  .filtro[aria-pressed="true"] { background: #b3121f; color: #fff; box-shadow: none; }
+  .acordeon { list-style: none; border-top: 1px solid var(--linea); }
+  .acordeon > li { border-bottom: 1px solid var(--linea); }
+  .acordeon .titulo { width: 100%; display: grid; grid-template-columns: 1fr auto 40px; align-items: center; gap: 16px; padding: 26px 0; text-align: left; }
+  .acordeon .titulo b { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 4vw, 52px); line-height: 1; }
+  .acordeon .titulo span { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-2); }
+  .acordeon .mas { font-size: 26px; color: var(--acento); transition: transform .3s; text-align: right; }
+  .acordeon li.abierta .mas { transform: rotate(45deg); }
+  .acordeon .cuerpo { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s ease; }
+  .acordeon li.abierta .cuerpo { grid-template-rows: 1fr; }
+  .acordeon .cuerpo > div { overflow: hidden; }
+  .acordeon .info { display: grid; grid-template-columns: 1fr 1fr auto; gap: 24px; padding-bottom: 30px; color: var(--tinta-2); align-items: start; }
+  .servicios { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; }
+  .servicios li { font-size: 12.5px; padding: 4px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--linea); }
+  @media (max-width: 760px) { .sedes { padding: 90px 0; } .acordeon .titulo { grid-template-columns: 1fr 32px; } .acordeon .titulo span { display: none; } .acordeon .info { grid-template-columns: 1fr; } }
+
+  /* ---------- Cierre y pie ---------- */
+  .cierre { padding: 150px 20px; display: grid; place-items: center; text-align: center; border-bottom: 1px solid var(--linea); }
+  .cierre h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(44px, 7vw, 110px); line-height: 1; margin: 14px 0 30px; }
+  footer { padding: 90px 0 40px; }
+  .gran-marca { font-family: var(--serif); font-size: clamp(80px, 19vw, 300px); line-height: .85; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.6); white-space: nowrap; }
+  .pie-columnas { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--linea); font-size: 14px; color: var(--tinta-2); }
+  .pie-columnas b { display: block; color: var(--tinta); font-weight: 500; margin-bottom: 8px; }
+  .pie-columnas a { text-decoration: none; display: block; }
+  .pie-columnas a:hover { color: var(--tinta); }
+  @media (max-width: 760px) { .pie-columnas { grid-template-columns: 1fr; gap: 24px; } }
+
+  /* ---------- Aparecer al hacer scroll ---------- */
+  [data-revelar] { opacity: 0; transform: translateY(36px); transition: opacity 1s ease, transform 1s cubic-bezier(.2,.7,.2,1); }
+  [data-revelar].visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    [data-revelar] { opacity: 1; transform: none; }
+    .portada .marco img { transform: none; }
+  }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 90px; z-index: 80; transform: translate(-50%, 20px); opacity: 0; visibility: hidden;
+    background: #7a0c15; color: #fff; padding: 14px 18px; border-radius: 6px; font-size: 14px; max-width: calc(100% - 32px);
+    transition: opacity .25s, transform .25s, visibility .25s;
+  }
+  .toast.visible { opacity: 1; transform: translate(-50%, 0); visibility: visible; }
+</style>
+</head>
+<body>
+
+<div class="aviso roja" role="note">
+  Concepto de rediseño <b>no oficial</b> de Pablo Ortiz Ochoa para su portafolio · <a href="caso.html">Ver antes y después</a> · <a href="https://www.asadosdonarosa.com/" rel="noopener">Página oficial ↗</a>
+</div>
+
+<header class="encabezado">
+  <div class="envoltura">
+    <a class="marca" href="#inicio" aria-label="Doña Rosa, inicio">Doña Rosa</a>
+    <button class="abrir-menu" id="abrirMenu" aria-expanded="false" aria-controls="capaMenu">Menú <i aria-hidden="true"><b></b><b></b></i></button>
+  </div>
+</header>
+
+<div class="capa-menu roja" id="capaMenu" role="dialog" aria-modal="true" aria-label="Navegación">
+  <button class="cerrar-menu" id="cerrarMenu">Cerrar ✕</button>
+  <nav>
+    <a href="#carta">La carta</a>
+    <a href="#para-llevar">Para llevar</a>
+    <a href="#sedes">Sedes</a>
+    <a href="#historia">Historia</a>
+  </nav>
+  <div class="foto" role="img" aria-label="Arepas asándose en la parrilla"></div>
+  <p class="pie-menu">Cocina paisa desde 1986 · Siete sedes en Antioquia y el Atlántico</p>
+</div>
+
+<main id="inicio">
+  <!-- Portada -->
+  <section class="portada">
+    <div class="envoltura">
+      <div>
+        <span class="etiqueta">Asados Doña Rosa · Antioquia</span>
+        <h1>Tradición paisa<br>desde <em>1986</em></h1>
+        <p>Frijoles, chicharrón, arepa y el sabor de la montaña, servidos como en casa desde hace cuarenta años.</p>
+        <div class="acciones">
+          <a class="boton rojo" href="#carta">Ver la carta</a>
+          <button class="boton linea" data-demo="Reservar mesa">Reservar</button>
+        </div>
+      </div>
+      <div class="marco"><img src="img/portada-grande.jpg" width="2000" height="1250" alt="Cazuela de comida típica con carne asada, huevo frito, patacón y aguacate" fetchpriority="high"></div>
+    </div>
+  </section>
+
+  <!-- Introducción -->
+  <section class="intro" id="historia">
+    <div class="envoltura">
+      <img class="foto" src="img/arepas.jpg" width="900" height="1100" alt="Arepas blancas asándose sobre la parrilla" loading="lazy" data-revelar>
+      <div data-revelar>
+        <span class="etiqueta">Nuestra historia</span>
+        <h2>Una casita en el Alto de Las Palmas que se volvió tradición</h2>
+        <p>Doña Rosa empezó en 1986 con un local pequeño y comida típica hecha a mano. Cuarenta años después, la receta es la misma: tradición, familia y el sabor de nuestra tierra, ahora en siete sedes.</p>
+        <div class="cifras">
+          <div><b>40</b><span>años</span></div>
+          <div><b>7</b><span>sedes</span></div>
+          <div><b>250+</b><span>personas en el equipo</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Texto que se desplaza, sobre franja roja -->
+  <div class="cintas roja" aria-hidden="true">
+    <div class="cinta"><div class="pista"><span>Bandeja paisa · Arepa con quesito · Chicharrón · Frijoles ·</span><span>Bandeja paisa · Arepa con quesito · Chicharrón · Frijoles ·</span></div></div>
+    <div class="cinta reversa contorno"><div class="pista"><span>Desde 1986 · Asados Doña Rosa · Cocina de la montaña ·</span><span>Desde 1986 · Asados Doña Rosa · Cocina de la montaña ·</span></div></div>
+  </div>
+
+  <!-- Frase con fotos dispersas -->
+  <section class="frase">
+    <img class="dispersa d1" src="img/sopa.jpg" width="900" height="1100" alt="Sopa colombiana con papa frita en hilos" loading="lazy" data-parallax="0.12">
+    <img class="dispersa d2" src="img/parrilla.jpg" width="800" height="600" alt="Tabla de carnes asadas con patacones y limón" loading="lazy" data-parallax="-0.1">
+    <img class="dispersa d3" src="img/desayunos.jpg" width="800" height="600" alt="Desayuno con huevos fritos y carne" loading="lazy" data-parallax="0.16">
+    <img class="dispersa d4" src="img/tipico.jpg" width="800" height="600" alt="Plato típico con carne, arroz y frijoles" loading="lazy" data-parallax="-0.14">
+    <div class="envoltura" data-revelar>
+      <h2>Donde la cocina de la montaña se sirve en mesa grande</h2>
+      <p>Recetas antioqueñas de toda la vida, porciones generosas y el ambiente de una casa paisa, para ir con la familia o parar camino al aeropuerto.</p>
+    </div>
+  </section>
+
+  <!-- Imagen a todo lo ancho -->
+  <section class="ancho roja">
+    <div class="texto" data-revelar>
+      <span class="etiqueta">Hecho en casa</span>
+      <h2>Una arepa a la vez</h2>
+      <p>Hogao casero, aguacate, banano y arepa recién asada: los acompañantes de siempre, preparados cada mañana.</p>
+      <a class="boton rojo" href="#carta">Ver la carta</a>
+    </div>
+    <img src="img/acompanantes.jpg" width="1800" height="1000" alt="Aguacate, banano, naranja, hogao y arepa sobre un mantel de cuadros" loading="lazy">
+  </section>
+
+  <!-- Platos de la casa -->
+  <section class="insignia">
+    <div class="envoltura">
+      <div class="texto" data-revelar>
+        <span class="etiqueta">Platos de la casa</span>
+        <p>Los que más se piden en una casa paisa. Toca cada uno para verlo.</p>
+        <ul class="lista-platos" id="listaPlatos"></ul>
+      </div>
+      <div class="foto"><img id="fotoPlato" src="img/almuerzos.jpg" width="800" height="600" alt=""></div>
+    </div>
+  </section>
+
+  <!-- Carta completa (sección roja) -->
+  <section class="carta roja" id="carta">
+    <div class="envoltura">
+      <span class="etiqueta">La carta</span>
+      <h2 data-revelar>Todo el menú, a la vista</h2>
+      <div class="pestanas" role="tablist" aria-label="Categorías de la carta">
+        <button class="pestana" role="tab" aria-selected="true" aria-controls="platos" data-cat="desayunos">Desayunos</button>
+        <button class="pestana" role="tab" aria-selected="false" aria-controls="platos" data-cat="almuerzos">Almuerzos</button>
+        <button class="pestana" role="tab" aria-selected="false" aria-controls="platos" data-cat="parrilla">Parrilla</button>
+        <button class="pestana" role="tab" aria-selected="false" aria-controls="platos" data-cat="postres">Postres</button>
+      </div>
+      <ul class="platos" id="platos" role="tabpanel" aria-live="polite"></ul>
+      <p class="nota">En este concepto, desayunos, almuerzos y parrilla son platos de ejemplo sin precio; los postres tienen los precios publicados en la tienda en línea oficial (noviembre de 2026).</p>
+    </div>
+  </section>
+
+  <!-- Para llevar -->
+  <section class="llevar" id="para-llevar">
+    <div class="envoltura">
+      <div class="cabeza">
+        <div><span class="etiqueta">Mercado Doña Rosa</span><h2>Doña Rosa en tu casa</h2></div>
+        <p>Los antojitos para llevar, con el precio a la vista y un botón para pedir en un paso.</p>
+      </div>
+      <div class="productos" id="productos"></div>
+      <p class="nota">Precios tomados de la tienda en línea oficial el 25 de noviembre de 2026. Desliza para ver más →</p>
+    </div>
+  </section>
+
+  <!-- Sedes -->
+  <section class="sedes" id="sedes">
+    <div class="envoltura">
+      <div class="cabeza">
+        <div><span class="etiqueta">Sedes</span><h2>Siete casas, un mismo sabor</h2></div>
+        <div class="filtros" role="group" aria-label="Filtrar sedes por región">
+          <button class="filtro" aria-pressed="true" data-region="todas">Todas</button>
+          <button class="filtro" aria-pressed="false" data-region="Antioquia">Antioquia</button>
+          <button class="filtro" aria-pressed="false" data-region="Atlántico">Atlántico</button>
+        </div>
+      </div>
+      <ul class="acordeon" id="acordeon"></ul>
+    </div>
+  </section>
+
+  <!-- Cierre -->
+  <section class="cierre">
+    <div data-revelar>
+      <span class="etiqueta">Te esperamos</span>
+      <h2>¿Mesa para la familia?</h2>
+      <button class="boton rojo" data-demo="Reservar mesa">Reservar mesa</button>
+    </div>
+  </section>
+</main>
+
+<footer class="roja">
+  <div class="envoltura">
+    <div class="gran-marca" aria-hidden="true">Doña Rosa</div>
+    <div class="pie-columnas">
+      <div><b>Concepto no oficial</b>Rediseño hecho por Pablo Ortiz Ochoa como proyecto de portafolio. No está afiliado a Asados Doña Rosa; la información del negocio se tomó de su <a href="https://www.asadosdonarosa.com/" rel="noopener" style="display:inline;text-decoration:underline">página oficial</a>.</div>
+      <div><b>Explorar</b><a href="#carta">La carta</a><a href="#para-llevar">Para llevar</a><a href="#sedes">Sedes</a><a href="caso.html">Antes y después</a></div>
+      <div><b>Fotos</b>Unsplash: Willian Reis, Gennady Zakharin, Marcos Paulo Prado, Alfredo Burgos, Usman Yousaf, Leila Issa y Alexandra Tran.</div>
+    </div>
+  </div>
+</footer>
+
+<button class="reserva-flotante" data-demo="Reservar mesa" aria-label="Reservar una mesa"><span>Reservar mesa</span><i aria-hidden="true">→</i></button>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const pesos = n => '$' + n.toLocaleString('es-CO');
+
+  // ---------- Platos de la casa ----------
+  const INSIGNIA = [
+    ['Bandeja paisa', 'img/almuerzos.jpg', 'Plato con carne, huevo, arroz y jugos naturales', 'Frijoles, arroz, chicharrón, carne molida, chorizo, huevo, maduro, arepa y aguacate. El plato que lo resume todo.'],
+    ['Sopas', 'img/sopa.jpg', 'Sopa colombiana con papa frita en hilos', 'Mondongo, sancocho y frijoles, servidos con arroz, aguacate y arepa.'],
+    ['Parrilla', 'img/parrilla-alta.jpg', 'Tabla de carnes asadas con patacones y limón', 'Chorizo antioqueño, morcilla, chicharrón y carnes a la brasa con papa criolla y patacón.'],
+    ['Calentado', 'img/desayunos.jpg', 'Desayuno con huevos fritos, carne y verduras', 'El desayuno paisa: frijoles y arroz del día anterior, huevo, arepa y chocolate.'],
+  ];
+  $('listaPlatos').innerHTML = INSIGNIA.map(([n], i) => `
+    <li class="${i === 0 ? 'activo' : ''}">
+      <button aria-expanded="${i === 0}" data-i="${i}"><span class="nombre">${n}</span><span class="num">0${i + 1}</span></button>
+      <div class="detalle"><p>${INSIGNIA[i][3]}</p></div>
+    </li>`).join('');
+  function elegirPlato(i) {
+    const [, foto, alt] = INSIGNIA[i];
+    const img = $('fotoPlato');
+    img.style.opacity = 0;
+    setTimeout(() => { img.src = foto; img.alt = alt; img.style.opacity = 1; }, 200);
+    document.querySelectorAll('#listaPlatos li').forEach((li, k) => {
+      li.classList.toggle('activo', k === i);
+      li.querySelector('button').setAttribute('aria-expanded', String(k === i));
+    });
+  }
+  $('listaPlatos').addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if (b) elegirPlato(+b.dataset.i); });
+  $('listaPlatos').addEventListener('mouseover', e => { const b = e.target.closest('button[data-i]'); if (b && !b.closest('li').classList.contains('activo')) elegirPlato(+b.dataset.i); });
+  $('fotoPlato').alt = INSIGNIA[0][2];
+
+  // ---------- Carta (platos de ejemplo; postres con precios oficiales) ----------
+  const CARTA = {
+    desayunos: [['Calentado paisa', 'Frijoles, arroz, huevo, arepa y quesito'], ['Huevos pericos', 'Con tomate y cebolla, arepa y chocolate'], ['Arepa de chócolo', 'Con quesito y mantequilla'], ['Arepa con hogao', 'Arepa asada, hogao casero y quesito']],
+    almuerzos: [['Bandeja paisa', 'Frijoles, arroz, chicharrón, carne molida, chorizo, huevo, maduro, arepa y aguacate'], ['Mondongo', 'Con arroz, aguacate y arepa'], ['Sancocho trifásico', 'Res, cerdo y pollo, con arroz y aguacate'], ['Frijolada', 'Frijoles con garra, arroz y maduro']],
+    parrilla: [['Picada Doña Rosa', 'Chorizo, morcilla, chicharrón, papa criolla y patacón'], ['Churrasco', 'Con papa salada y ensalada'], ['Punta de anca', 'Con arepa, papa criolla y hogao'], ['Chorizo antioqueño', 'Con arepa y limón']],
+    postres: [['Fresas con crema', 'Porción individual', 17000], ['Flan de caramelo', 'Porción individual', 13000], ['Arroz con leche', 'Porción individual', 12500], ['Brevas Doña Rosa', 'Frasco de 370 g', 7000]],
+  };
+  function mostrarCarta(cat) {
+    $('platos').innerHTML = CARTA[cat].map(([n, d, p]) => `
+      <li><div class="fila"><b>${n}</b>${p ? `<i></i><span>${pesos(p)}</span>` : ''}</div><small>${d}</small></li>`).join('');
+    document.querySelectorAll('[data-cat]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.cat === cat)));
+  }
+  document.querySelectorAll('[data-cat]').forEach(b => b.addEventListener('click', () => mostrarCarta(b.dataset.cat)));
+  mostrarCarta('desayunos');
+
+  // ---------- Para llevar (precios oficiales, 25/11/2026) ----------
+  const PRODUCTOS = [['Mini empanadas', 'x 15', 9000], ['Pandequeso', 'x 10', 38000], ['Almojábanas', 'x 6', 23000], ['Tamal', 'unidad', 15000], ['Chorizo antioqueño', 'x 5', 35300], ['Chorizo parrillero', 'x 5', 25300], ['Cuajada Doña Rosa', 'unidad', 14500], ['Flan de caramelo', 'unidad', 13000]];
+  $('productos').innerHTML = PRODUCTOS.map(([n, c, p], i) => `
+    <article class="producto">
+      <span class="n">${String(i + 1).padStart(2, '0')}</span>
+      <b>${n}</b><small>${c}</small>
+      <div class="pie"><span class="precio">${pesos(p)}</span><button data-demo="Pedir ${n}">Pedir</button></div>
+    </article>`).join('');
+
+  // ---------- Sedes (información de la página oficial) ----------
+  const SEDES = [
+    ['Sajonia', 'Rionegro', 'Antioquia', 'Vereda Sajonia, 500 m después de la glorieta del aeropuerto, sentido aeropuerto–Medellín.', ['Parque infantil', 'Música en vivo', 'Mercado', 'Pet friendly', 'Parqueadero']],
+    ['San José', 'Rionegro', 'Antioquia', 'Vereda Sajonia, 500 m antes de la glorieta del aeropuerto, sentido Medellín–aeropuerto.', ['Recreación infantil', 'Mercado', 'Pet friendly', 'Parqueadero']],
+    ['Premium Plaza', 'Medellín', 'Antioquia', 'C. C. Premium Plaza, local 3365, Calle 29 #43G-10.', ['Café', 'Coworking', 'Música en vivo', 'Pet friendly']],
+    ['La Pintada', 'La Pintada', 'Antioquia', 'Avenida 30 #30A-142.', ['Pet friendly', 'Parqueadero', 'Domicilios']],
+    ['La Pintada Campestre', 'La Pintada', 'Antioquia', 'Finca hotel con piscina y espacio natural.', ['Piscina', 'Parque infantil', 'Pet friendly']],
+    ['Altos del Prado', 'Barranquilla', 'Atlántico', 'C. C. Cenco Altos del Prado, Carrera 56 #75-155.', ['Música en vivo', 'Parqueadero', 'Domicilios']],
+    ['Puerto Colombia', 'Puerto Colombia', 'Atlántico', 'Carrera 51B, vía al Caujaral km 6, EDS Papiros Park.', ['Parque infantil', 'Mini mercado', 'Música en vivo']],
+  ];
+  function mostrarSedes(region) {
+    $('acordeon').innerHTML = SEDES.filter(s => region === 'todas' || s[2] === region).map(([n, ciudad, dep, dir, serv], i) => `
+      <li class="${i === 0 ? 'abierta' : ''}">
+        <button class="titulo" aria-expanded="${i === 0}"><b>${n}</b><span>${ciudad} · ${dep}</span><i class="mas" aria-hidden="true">+</i></button>
+        <div class="cuerpo"><div><div class="info">
+          <p>${dir}</p>
+          <ul class="servicios">${serv.map(x => `<li>${x}</li>`).join('')}</ul>
+          <a class="boton linea" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Asados Doña Rosa ' + n + ' ' + ciudad)}">Cómo llegar ↗</a>
+        </div></div></div>
+      </li>`).join('');
+    document.querySelectorAll('[data-region]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.region === region)));
+  }
+  $('acordeon').addEventListener('click', e => {
+    const b = e.target.closest('.titulo'); if (!b) return;
+    const li = b.parentElement, abrir = !li.classList.contains('abierta');
+    li.classList.toggle('abierta', abrir); b.setAttribute('aria-expanded', String(abrir));
+  });
+  document.querySelectorAll('[data-region]').forEach(b => b.addEventListener('click', () => mostrarSedes(b.dataset.region)));
+  mostrarSedes('todas');
+
+  // ---------- Menú a pantalla completa ----------
+  function menu(abrir) {
+    $('capaMenu').classList.toggle('abierta', abrir);
+    $('abrirMenu').setAttribute('aria-expanded', String(abrir));
+    document.body.style.overflow = abrir ? 'hidden' : '';
+    // mueve el foco al abrir; al cerrar, lo devuelve al botón Menú
+    setTimeout(() => (abrir ? $('cerrarMenu') : $('abrirMenu')).focus(), 60);
+  }
+  $('abrirMenu').addEventListener('click', () => menu(true));
+  $('cerrarMenu').addEventListener('click', () => menu(false));
+  $('capaMenu').addEventListener('click', e => { if (e.target.tagName === 'A') menu(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('capaMenu').classList.contains('abierta')) menu(false); });
+
+  // ---------- Animaciones al hacer scroll ----------
+  const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const observador = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observador.unobserve(e.target); } }), { threshold: .15 });
+  document.querySelectorAll('[data-revelar]').forEach(el => observador.observe(el));
+  const paralaje = [...document.querySelectorAll('[data-parallax]')];
+  if (!quieto && paralaje.length) {
+    let pendiente = false;
+    const mover = () => {
+      paralaje.forEach(el => {
+        const r = el.parentElement.getBoundingClientRect();
+        el.style.transform = `translateY(${(r.top + r.height / 2 - innerHeight / 2) * +el.dataset.parallax}px)`;
+      });
+      pendiente = false;
+    };
+    addEventListener('scroll', () => { if (!pendiente) { pendiente = true; requestAnimationFrame(mover); } }, { passive: true });
+    mover();
+  }
+
+  // ---------- Botones de demostración ----------
+  let t;
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-demo]'); if (!b) return;
+    $('toast').textContent = `Concepto: en la página real, «${b.dataset.demo}» abriría WhatsApp con el mensaje listo para enviar.`;
+    $('toast').classList.add('visible');
+    clearTimeout(t); t = setTimeout(() => $('toast').classList.remove('visible'), 3500);
+  });
+</script>
+</body>
+</html>
