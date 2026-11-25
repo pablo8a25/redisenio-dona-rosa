@@ -632,8 +632,12 @@
   });
 
   // ---------- Asistente con IA ----------
-  // El chat habla con un Apps Script (asistente/Codigo.gs) que guarda la clave de Gemini.
-  const ASISTENTE_URL = 'https://script.google.com/macros/s/AKfycbw4CqyozkDaRgEKV2PAqQqZEopzBwk9EGs80OXTBd7g7A4d4wcx_lSyFLTExzcjg6IavQ/exec';
+  // El chat habla con una función de Vercel (api/preguntar.js) que guarda la clave de Gemini.
+  // Si Vercel falla, prueba con el respaldo en Google Apps Script (asistente/Codigo.gs).
+  const ASISTENTES = [
+    'https://redisenio-dona-rosa.vercel.app/api/preguntar',
+    'https://script.google.com/macros/s/AKfycbw4CqyozkDaRgEKV2PAqQqZEopzBwk9EGs80OXTBd7g7A4d4wcx_lSyFLTExzcjg6IavQ/exec',
+  ];
   const SALUDO = '¡Hola! Soy el asistente de este concepto de Doña Rosa. Pregúntame por los platos, los precios para llevar o las sedes.';
   const historial = [];   // { rol: 'usuario' | 'asistente', texto }
   let ocupado = false;
@@ -669,16 +673,18 @@
     puntos.innerHTML = '<i></i><i></i><i></i>'; puntos.setAttribute('aria-label', 'Escribiendo');
 
     let respuesta = '', error = '';
-    try {
-      if (!ASISTENTE_URL) throw new Error('El asistente todavía no está conectado.');
-      const control = new AbortController(); const reloj = setTimeout(() => control.abort(), 30000);
-      // text/plain evita la verificación previa (CORS) que Apps Script no admite
-      const r = await fetch(ASISTENTE_URL, { method: 'POST', body: JSON.stringify({ mensajes: historial }), headers: { 'Content-Type': 'text/plain;charset=utf-8' }, signal: control.signal });
-      clearTimeout(reloj);
-      const datos = await r.json();
-      respuesta = datos.respuesta || ''; error = datos.error || '';
-    } catch (e) {
-      error = e.name === 'AbortError' ? 'El asistente se demoró demasiado. Intenta de nuevo.' : (e.message.startsWith('El asistente') ? e.message : 'No hay conexión con el asistente. Intenta de nuevo en un momento.');
+    for (const url of ASISTENTES) {
+      try {
+        const control = new AbortController(); const reloj = setTimeout(() => control.abort(), 30000);
+        // text/plain evita la verificación previa (CORS), que Apps Script no admite
+        const r = await fetch(url, { method: 'POST', body: JSON.stringify({ mensajes: historial }), headers: { 'Content-Type': 'text/plain;charset=utf-8' }, signal: control.signal });
+        clearTimeout(reloj);
+        const datos = await r.json();
+        respuesta = datos.respuesta || ''; error = datos.error || '';
+        if (respuesta || r.status < 500) break;   // respondió (o la pregunta no era válida): no hace falta el respaldo
+      } catch (e) {
+        error = e.name === 'AbortError' ? 'El asistente se demoró demasiado. Intenta de nuevo.' : 'No hay conexión con el asistente. Intenta de nuevo en un momento.';
+      }
     }
     puntos.remove();
     if (respuesta) { historial.push({ rol: 'asistente', texto: respuesta }); burbuja(respuesta, 'asistente'); }
