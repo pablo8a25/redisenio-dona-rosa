@@ -254,6 +254,57 @@
     .portada .marco img { transform: none; }
   }
 
+  /* ---------- Asistente con IA (chat) ---------- */
+  .chat-boton {
+    position: fixed; left: 20px; bottom: 20px; z-index: 40; display: flex; align-items: center; gap: 10px; height: 50px; padding: 0 20px 0 14px;
+    border-radius: 999px; background: #fff; color: #b3121f; font-size: 14px; font-weight: 600;
+    box-shadow: 0 0 0 1.5px #b3121f, 0 10px 30px rgba(92,6,14,.22); transition: transform .2s, background .2s, color .2s;
+  }
+  .chat-boton:hover { transform: translateY(-2px); background: #b3121f; color: #fff; }
+  .chat-boton svg { width: 24px; height: 24px; flex: none; }
+  .chat-boton .punto { width: 8px; height: 8px; border-radius: 50%; background: #2eb872; box-shadow: 0 0 0 3px rgba(46,184,114,.2); }
+  .chat-boton[aria-expanded="true"] { opacity: 0; pointer-events: none; }
+  .chat {
+    position: fixed; left: 20px; bottom: 20px; z-index: 70; width: 380px; height: min(600px, calc(100svh - 40px));
+    display: flex; flex-direction: column; background: #fff; color: #7a0c15; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(179,18,31,.18), 0 24px 60px rgba(92,6,14,.28);
+    transform-origin: bottom left; transform: translateY(16px) scale(.96); opacity: 0; visibility: hidden;
+    transition: transform .3s cubic-bezier(.2,.7,.2,1), opacity .25s, visibility 0s linear .3s;
+  }
+  .chat.abierto { transform: none; opacity: 1; visibility: visible; transition: transform .3s cubic-bezier(.2,.7,.2,1), opacity .25s, visibility 0s; }
+  .chat-cabeza { display: flex; align-items: center; gap: 12px; padding: 16px 16px 16px 18px; background: #b3121f; color: #fff; }
+  .chat-cabeza .avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: #b3121f; font-family: var(--serif); font-size: 18px; flex: none; }
+  .chat-cabeza b { display: block; font-family: var(--serif); font-weight: 400; font-size: 21px; line-height: 1.1; }
+  .chat-cabeza small { font-size: 12px; color: rgba(255,255,255,.84); }
+  .chat-cabeza button { margin-left: auto; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; color: #fff; transition: background .2s; }
+  .chat-cabeza button:hover { background: rgba(255,255,255,.16); }
+  .chat-mensajes { flex: 1; overflow-y: auto; padding: 18px 16px 8px; display: flex; flex-direction: column; gap: 10px; overscroll-behavior: contain; }
+  .burbuja { max-width: 86%; padding: 11px 14px; border-radius: 14px; font-size: 14.5px; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; }
+  .burbuja.asistente { align-self: flex-start; background: #fdf0f1; border-bottom-left-radius: 4px; }
+  .burbuja.usuario { align-self: flex-end; background: #b3121f; color: #fff; border-bottom-right-radius: 4px; }
+  .burbuja.error { align-self: center; background: none; color: rgba(122,12,21,.74); font-size: 13px; text-align: center; }
+  .burbuja a { color: inherit; font-weight: 600; }
+  .escribiendo { display: inline-flex; gap: 4px; padding: 15px 16px; }
+  .escribiendo i { width: 7px; height: 7px; border-radius: 50%; background: #b3121f; opacity: .3; animation: saltito 1s infinite; }
+  .escribiendo i:nth-child(2) { animation-delay: .15s; } .escribiendo i:nth-child(3) { animation-delay: .3s; }
+  @keyframes saltito { 30% { opacity: 1; transform: translateY(-3px); } }
+  .sugerencias { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 16px 12px; }
+  .sugerencias[hidden] { display: none; }
+  .sugerencias button { font-size: 12.5px; padding: 7px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(179,18,31,.35); color: #b3121f; transition: background .2s, color .2s; text-align: left; }
+  .sugerencias button:hover { background: #b3121f; color: #fff; }
+  .chat-form { display: flex; gap: 8px; padding: 12px 12px 8px; border-top: 1px solid rgba(179,18,31,.14); }
+  .chat-form input { flex: 1; min-width: 0; height: 44px; padding: 0 14px; border: 1px solid rgba(179,18,31,.25); border-radius: 8px; font: 15px var(--sans); color: #7a0c15; background: #fff; }
+  .chat-form input:focus { outline: none; border-color: #b3121f; box-shadow: 0 0 0 3px rgba(179,18,31,.12); }
+  .chat-form button { width: 44px; height: 44px; border-radius: 8px; background: #b3121f; color: #fff; font-size: 18px; display: grid; place-items: center; transition: background .2s; }
+  .chat-form button:hover { background: #8f0d18; }
+  .chat-form button:disabled { opacity: .45; cursor: default; }
+  .chat-legal { padding: 0 14px 12px; font-size: 11.5px; line-height: 1.4; color: rgba(122,12,21,.62); }
+  @media (max-width: 760px) {
+    .chat-boton { width: 50px; padding: 0; justify-content: center; }
+    .chat-boton .texto, .chat-boton .punto { display: none; }
+    .chat { left: 10px; right: 10px; bottom: 10px; width: auto; height: calc(100svh - 20px); max-height: 640px; }
+  }
+
   .toast {
     position: fixed; left: 50%; bottom: 90px; z-index: 80; transform: translate(-50%, 20px); opacity: 0; visibility: hidden;
     background: #7a0c15; color: #fff; padding: 14px 18px; border-radius: 6px; font-size: 14px; max-width: calc(100% - 32px);
@@ -429,6 +480,31 @@
 <button class="reserva-flotante" data-demo="Reservar mesa" aria-label="Reservar una mesa"><span>Reservar mesa</span><i aria-hidden="true">→</i></button>
 <div class="toast" id="toast" role="status"></div>
 
+<!-- Asistente con IA -->
+<button class="chat-boton" id="chatBoton" aria-expanded="false" aria-controls="chat" aria-label="Abrir el asistente con IA">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01"/></svg>
+  <span class="texto">Pregúntale al asistente</span><span class="punto" aria-hidden="true"></span>
+</button>
+<section class="chat" id="chat" role="dialog" aria-label="Asistente de Doña Rosa" aria-modal="false">
+  <div class="chat-cabeza">
+    <span class="avatar" aria-hidden="true">DR</span>
+    <div><b>Asistente Doña Rosa</b><small>Demo con IA · concepto no oficial</small></div>
+    <button id="chatCerrar" aria-label="Cerrar el asistente">✕</button>
+  </div>
+  <div class="chat-mensajes" id="chatMensajes" aria-live="polite"></div>
+  <div class="sugerencias" id="chatSugerencias">
+    <button>¿Qué sedes tienen parque infantil?</button>
+    <button>¿Cuánto vale el pandequeso?</button>
+    <button>¿Qué lleva la bandeja paisa?</button>
+    <button>¿Dónde queda la sede de Barranquilla?</button>
+  </div>
+  <form class="chat-form" id="chatForm" autocomplete="off">
+    <input id="chatTexto" maxlength="500" placeholder="Escribe tu pregunta…" aria-label="Tu pregunta">
+    <button id="chatEnviar" aria-label="Enviar">↑</button>
+  </form>
+  <p class="chat-legal">Respuestas generadas con IA (Gemini): pueden tener errores. No escribas datos personales. Información oficial en <a href="https://www.asadosdonarosa.com/" rel="noopener">asadosdonarosa.com</a>.</p>
+</section>
+
 <script>
   const $ = id => document.getElementById(id);
   const pesos = n => '$' + n.toLocaleString('es-CO');
@@ -552,6 +628,67 @@
     $('toast').classList.add('visible');
     clearTimeout(t); t = setTimeout(() => $('toast').classList.remove('visible'), 3500);
   });
+
+  // ---------- Asistente con IA ----------
+  // El chat habla con un Apps Script (asistente/Codigo.gs) que guarda la clave de Gemini.
+  const ASISTENTE_URL = 'https://script.google.com/macros/s/AKfycbw4CqyozkDaRgEKV2PAqQqZEopzBwk9EGs80OXTBd7g7A4d4wcx_lSyFLTExzcjg6IavQ/exec';
+  const SALUDO = '¡Hola! Soy el asistente de este concepto de Doña Rosa. Pregúntame por los platos, los precios para llevar o las sedes.';
+  const historial = [];   // { rol: 'usuario' | 'asistente', texto }
+  let ocupado = false;
+
+  function burbuja(texto, tipo) {
+    const div = document.createElement('div');
+    div.className = 'burbuja ' + tipo;
+    // texto plano; los enlaces se vuelven clicables sin usar innerHTML
+    texto.split(/(https?:\/\/[^\s)]+[^\s).,;:])/g).forEach((parte, i) => {
+      if (i % 2) { const a = document.createElement('a'); a.href = parte; a.textContent = parte.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''); a.target = '_blank'; a.rel = 'noopener'; div.append(a); }
+      else div.append(parte);
+    });
+    $('chatMensajes').append(div);
+    $('chatMensajes').scrollTop = $('chatMensajes').scrollHeight;
+    return div;
+  }
+
+  function abrirChat(abrir) {
+    $('chat').classList.toggle('abierto', abrir);
+    $('chatBoton').setAttribute('aria-expanded', String(abrir));
+    if (abrir && !$('chatMensajes').children.length) burbuja(SALUDO, 'asistente');
+    setTimeout(() => (abrir ? $('chatTexto') : $('chatBoton')).focus(), 80);
+  }
+
+  async function preguntar(texto) {
+    texto = texto.trim().slice(0, 500);
+    if (!texto || ocupado) return;
+    ocupado = true; $('chatEnviar').disabled = true;
+    $('chatSugerencias').hidden = true;
+    burbuja(texto, 'usuario');
+    historial.push({ rol: 'usuario', texto });
+    const puntos = burbuja('', 'asistente escribiendo');
+    puntos.innerHTML = '<i></i><i></i><i></i>'; puntos.setAttribute('aria-label', 'Escribiendo');
+
+    let respuesta = '', error = '';
+    try {
+      if (!ASISTENTE_URL) throw new Error('El asistente todavía no está conectado.');
+      const control = new AbortController(); const reloj = setTimeout(() => control.abort(), 30000);
+      // text/plain evita la verificación previa (CORS) que Apps Script no admite
+      const r = await fetch(ASISTENTE_URL, { method: 'POST', body: JSON.stringify({ mensajes: historial }), headers: { 'Content-Type': 'text/plain;charset=utf-8' }, signal: control.signal });
+      clearTimeout(reloj);
+      const datos = await r.json();
+      respuesta = datos.respuesta || ''; error = datos.error || '';
+    } catch (e) {
+      error = e.name === 'AbortError' ? 'El asistente se demoró demasiado. Intenta de nuevo.' : (e.message.startsWith('El asistente') ? e.message : 'No hay conexión con el asistente. Intenta de nuevo en un momento.');
+    }
+    puntos.remove();
+    if (respuesta) { historial.push({ rol: 'asistente', texto: respuesta }); burbuja(respuesta, 'asistente'); }
+    else { historial.pop(); burbuja(error || 'No pude responder. Intenta de nuevo.', 'error'); if (!historial.length) $('chatSugerencias').hidden = false; }
+    ocupado = false; $('chatEnviar').disabled = false; $('chatTexto').focus();
+  }
+
+  $('chatBoton').addEventListener('click', () => abrirChat(true));
+  $('chatCerrar').addEventListener('click', () => abrirChat(false));
+  $('chatForm').addEventListener('submit', e => { e.preventDefault(); const v = $('chatTexto').value; $('chatTexto').value = ''; preguntar(v); });
+  $('chatSugerencias').addEventListener('click', e => { if (e.target.tagName === 'BUTTON') preguntar(e.target.textContent); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('chat').classList.contains('abierto')) abrirChat(false); });
 </script>
 </body>
 </html>
