@@ -99,8 +99,12 @@ function limpiar(lista) {
 }
 
 async function preguntar(mensajes) {
-  const clave = process.env.GEMINI_API_KEY;
+  const clave = (process.env.GEMINI_API_KEY || '').trim();
   if (!clave) throw new Error('Falta la variable de entorno GEMINI_API_KEY');
+  // Una clave de Gemini es una sola palabra con letras, números, - y _
+  if (!/^[A-Za-z0-9_-]+$/.test(clave)) {
+    throw new Error('GEMINI_API_KEY tiene espacios u otros caracteres (largo ' + clave.length + '): pega solo la clave en Vercel → Settings → Environment Variables y vuelve a desplegar');
+  }
 
   const ultima = mensajes[mensajes.length - 1].texto;
   const idioma = pareceIngles(ultima)
@@ -145,7 +149,9 @@ module.exports = async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method === 'GET') {
-    return res.status(200).json({ ok: true, clave: process.env.GEMINI_API_KEY ? 'configurada' : 'falta GEMINI_API_KEY', modelos: MODELOS });
+    const clave = (process.env.GEMINI_API_KEY || '').trim();
+    const estado = !clave ? 'falta GEMINI_API_KEY' : /^[A-Za-z0-9_-]+$/.test(clave) ? 'configurada' : 'con caracteres inválidos: revisa GEMINI_API_KEY';
+    return res.status(200).json({ ok: true, clave: estado, modelos: MODELOS });
   }
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
