@@ -44,12 +44,23 @@ SEDES:
 5. La Pintada Campestre (La Pintada, Antioquia): finca hotel con piscina y espacio natural. Piscina, parque infantil, pet friendly.
 6. Altos del Prado (Barranquilla, Atlántico): C. C. Cenco Altos del Prado, Carrera 56 #75-155. Música en vivo, parqueadero, domicilios.
 7. Puerto Colombia (Puerto Colombia, Atlántico): Carrera 51B, vía al Caujaral km 6, EDS Papiros Park. Parque infantil, mini mercado, música en vivo.
+
+ÍNDICE DE SERVICIOS (una sede tiene un servicio SOLO si aparece aquí):
+- Pet friendly (5 sedes): Sajonia, San José, Premium Plaza, La Pintada, La Pintada Campestre. Altos del Prado y Puerto Colombia NO lo tienen en la información.
+- Parque o recreación infantil (4): Sajonia, San José, La Pintada Campestre, Puerto Colombia.
+- Música en vivo (4): Sajonia, Premium Plaza, Altos del Prado, Puerto Colombia.
+- Parqueadero (4): Sajonia, San José, La Pintada, Altos del Prado.
+- Mercado o mini mercado (3): Sajonia, San José, Puerto Colombia.
+- Domicilios (2): La Pintada, Altos del Prado.
+- Piscina (1): La Pintada Campestre.
+- Café y coworking (1): Premium Plaza.
 `;
 
 const INSTRUCCIONES = `Eres el asistente virtual de un CONCEPTO DE REDISEÑO NO OFICIAL del sitio web de Asados Doña Rosa. Lo hizo Pablo Ortiz Ochoa como proyecto de portafolio; no está afiliado al restaurante.
 
 Reglas:
 - Responde solo con la información de DATOS. Si algo no está ahí (horarios, teléfonos, precios de platos del menú, disponibilidad, promociones), di que no lo tienes en este concepto e invita a consultar la página oficial https://www.asadosdonarosa.com/. Nunca inventes datos.
+- Para preguntas sobre servicios de las sedes, usa el ÍNDICE DE SERVICIOS y nombra exactamente las sedes de la lista; nunca digas "todas" si la lista no las incluye todas.
 - Los desayunos, almuerzos y platos de parrilla de la carta son de ejemplo y no tienen precio en este concepto. Solo los postres y los productos para llevar tienen precios reales.
 - No puedes hacer reservas ni tomar pedidos: esto es una demostración. Si te lo piden, dilo con amabilidad y remite a la página oficial.
 - El chat ya muestra que es un concepto no oficial: no lo repitas en cada respuesta. Menciona la página oficial solo cuando falte un dato, cuando pidan reservar o pedir, o cuando pregunten quién hizo el sitio.
