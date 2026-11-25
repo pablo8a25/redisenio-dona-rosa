@@ -98,12 +98,22 @@ function limpiar(lista) {
   return mensajes;
 }
 
+/** Caracteres que no pueden ir en una cabecera HTTP (espacios, saltos de línea, tildes, flechas…). */
+function raros(clave) {
+  return [...clave].filter(c => c.charCodeAt(0) < 0x21 || c.charCodeAt(0) > 0x7e);
+}
+/** Describe el problema sin mostrar la clave: largo y códigos de los caracteres raros. */
+function describirClave(clave) {
+  const codigos = [...new Set(raros(clave).map(c => c.charCodeAt(0)))].slice(0, 6);
+  return 'largo ' + clave.length + ', códigos raros: ' + codigos.join(', ');
+}
+
 async function preguntar(mensajes) {
   const clave = (process.env.GEMINI_API_KEY || '').trim();
   if (!clave) throw new Error('Falta la variable de entorno GEMINI_API_KEY');
-  // Una clave de Gemini es una sola palabra con letras, números, - y _
-  if (!/^[A-Za-z0-9_-]+$/.test(clave)) {
-    throw new Error('GEMINI_API_KEY tiene espacios u otros caracteres (largo ' + clave.length + '): pega solo la clave en Vercel → Settings → Environment Variables y vuelve a desplegar');
+  // Una cabecera HTTP no admite espacios, saltos de línea ni caracteres fuera de ASCII
+  if (raros(clave).length) {
+    throw new Error('GEMINI_API_KEY tiene espacios u otros caracteres (' + describirClave(clave) + '): pega solo la clave en Vercel → Settings → Environment Variables y vuelve a desplegar');
   }
 
   const ultima = mensajes[mensajes.length - 1].texto;
@@ -150,7 +160,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method === 'GET') {
     const clave = (process.env.GEMINI_API_KEY || '').trim();
-    const estado = !clave ? 'falta GEMINI_API_KEY' : /^[A-Za-z0-9_-]+$/.test(clave) ? 'configurada' : 'con caracteres inválidos: revisa GEMINI_API_KEY';
+    const estado = !clave ? 'falta GEMINI_API_KEY' : !raros(clave).length ? 'configurada' : 'con caracteres inválidos (' + describirClave(clave) + ')';
     return res.status(200).json({ ok: true, clave: estado, modelos: MODELOS });
   }
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
