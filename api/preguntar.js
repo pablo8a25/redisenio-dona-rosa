@@ -139,13 +139,23 @@ async function preguntar(mensajes) {
   };
 
   let ultimoError = '';
-  for (const modelo of MODELOS) {
-    const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + modelo + ':generateContent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': clave },
-      body: JSON.stringify(cuerpo),
-    });
-    const textoRespuesta = await r.text();
+  for (const [i, modelo] of MODELOS.entries()) {
+    // El modelo principal a veces tarda casi un minuto: si pasa de 12 s, se usa el de respaldo
+    const espera = i < MODELOS.length - 1 ? 12000 : 15000;
+    let r, textoRespuesta;
+    try {
+      r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + modelo + ':generateContent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': clave },
+        body: JSON.stringify(cuerpo),
+        signal: AbortSignal.timeout(espera),
+      });
+      textoRespuesta = await r.text();
+    } catch (e) {
+      ultimoError = modelo + ': ' + (e.name === 'TimeoutError' ? 'sin respuesta en ' + espera / 1000 + ' s' : e.message);
+      console.warn(ultimoError);
+      continue;
+    }
     if (r.ok) {
       const datos = JSON.parse(textoRespuesta);
       const partes = datos.candidates?.[0]?.content?.parts || [];
