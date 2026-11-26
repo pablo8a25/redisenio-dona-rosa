@@ -15,7 +15,7 @@ const LIMITE_POR_MINUTO = 12;   // por instancia de la función
 const LIMITE_DIARIO = 300;      // por instancia; el plan gratis de Gemini tiene además su propio tope
 const MAX_MENSAJES = 8;
 const MAX_LETRAS = 500;
-const ORIGENES = ['https://pablo8a25.github.io', 'http://localhost:8766', 'http://127.0.0.1:8766'];
+const ORIGENES = ['https://redisenio-dona-rosa.vercel.app', 'https://pablo8a25.github.io', 'http://localhost:8766', 'http://127.0.0.1:8766'];
 
 const DATOS = `
 NEGOCIO: Asados Doña Rosa, restaurante de cocina paisa (antioqueña) desde 1986. Empezó en una casita en el Alto de Las Palmas. 40 años, 7 sedes en Antioquia y el Atlántico, más de 250 personas en el equipo. Página oficial: https://www.asadosdonarosa.com/

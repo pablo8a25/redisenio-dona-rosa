@@ -2,6 +2,8 @@
 
 Propuesta de rediseño **no oficial** del sitio web de Asados Doña Rosa, un restaurante de comida paisa con 40 años de historia y siete sedes. Es un proyecto de portafolio; no está afiliado al restaurante.
 
+**En línea:** https://redisenio-dona-rosa.vercel.app (la dirección vieja de GitHub Pages redirige aquí)
+
 - **Concepto:** `index.html`
 - **Caso de estudio (antes y después):** `caso.html`
 
@@ -27,9 +29,9 @@ Medido el 24 y 25 de noviembre de 2026 en la página de inicio.
 
 El botón **Pregúntale al asistente** abre un chat que responde preguntas sobre los platos, los precios para llevar y las sedes, en español o en inglés.
 
-- **Cómo funciona:** la página (GitHub Pages) le envía la conversación a una función de Vercel, `api/preguntar.js`, en `https://redisenio-dona-rosa.vercel.app/api/preguntar`. La función le pregunta a Gemini (`gemini-3.8-flash`; si no responde en 12 s, `gemini-3.5-flash-lite`) con instrucciones y datos fijos, y devuelve la respuesta. Se actualiza sola con cada `git push`.
+- **Cómo funciona:** la página (también en Vercel) le envía la conversación a la función `api/preguntar.js`, en `https://redisenio-dona-rosa.vercel.app/api/preguntar`. La función le pregunta a Gemini (`gemini-3.8-flash`; si no responde en 12 s, `gemini-3.5-flash-lite`) con instrucciones y datos fijos, y devuelve la respuesta. Se actualiza sola con cada `git push`.
 - **Respaldo:** si Vercel falla, el chat usa un Google Apps Script con la misma lógica (`asistente/Codigo.gs`).
-- **Seguridad:** la clave de la API vive solo en la variable de entorno `GEMINI_API_KEY` de Vercel (y en las propiedades del Apps Script), nunca en la página. Las instrucciones y los datos también están en el servidor, y la función solo acepta llamadas desde `pablo8a25.github.io`.
+- **Seguridad:** la clave de la API vive solo en la variable de entorno `GEMINI_API_KEY` de Vercel (y en las propiedades del Apps Script), nunca en la página. Las instrucciones y los datos también están en el servidor, y la función solo acepta llamadas desde la propia página en Vercel (y desde `pablo8a25.github.io`, que ahora redirige).
 - **Límites:** 12 preguntas por minuto y 300 al día; mensajes de máximo 500 caracteres. En Vercel los contadores son por instancia, así que son un freno aproximado; el plan gratis de Gemini tiene además su propio tope y no genera cobros.
 - **Sin inventar:** responde solo con la información del concepto, con un índice de servicios por sede para no generalizar. Lo que no está (horarios, teléfonos, precios de la carta) lo remite a la página oficial. No toma reservas ni pedidos.
 - **Idioma:** el servidor detecta si la pregunta está en inglés y se lo indica al modelo.
